@@ -1,2 +1,401 @@
-import java.aws.*;
-public class 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+
+// Classe Pessoa
+class Pessoa {
+    private static int contador = 0; // Contador estático para gerar códigos únicos
+    private int codigo;
+    private String nome;
+    private String endereco;
+    private String telefone;
+    private String anotacoes;
+
+
+    public Pessoa(String nome, String endereco, String telefone, String anotacoes) {
+        this.codigo = ++contador;
+        this.nome = nome;
+        this.endereco = endereco;
+        this.telefone = telefone;
+        this.anotacoes = anotacoes;
+    }
+
+
+    // Getters e setters
+    public int getCodigo() { return codigo; }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+    public String getEndereco() { return endereco; }
+    public void setEndereco(String endereco) { this.endereco = endereco; }
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
+    public String getAnotacoes() { return anotacoes; }
+    public void setAnotacoes(String anotacoes) { this.anotacoes = anotacoes; }
+
+
+    @Override
+    public String toString() {
+        return "Código: " + codigo + ", Nome: " + nome + ", Endereço: " + endereco + ", Telefone: " + telefone + ", Anotações: " + anotacoes;
+    }
+}
+
+
+// Classe Agenda
+class Agenda {
+    private ArrayList<Pessoa> pessoas;
+
+
+    public Agenda() {
+        pessoas = new ArrayList<>();
+    }
+
+
+    public void adicionarPessoa(Pessoa pessoa) {
+        pessoas.add(pessoa);
+    }
+
+
+    public Pessoa consultarPessoaPorCodigo(int codigo) {
+        for (Pessoa pessoa : pessoas) {
+            if (pessoa.getCodigo() == codigo) {
+                return pessoa;
+            }
+        }
+        return null;
+    }
+
+
+    public ArrayList<Pessoa> consultarPessoaPorNome(String nome) {
+        ArrayList<Pessoa> resultado = new ArrayList<>();
+        for (Pessoa pessoa : pessoas) {
+            if (pessoa.getNome().equalsIgnoreCase(nome)) {
+                resultado.add(pessoa);
+            }
+        }
+        return resultado;
+    }
+
+
+    public boolean alterarPessoa(int codigo, String nome, String endereco, String telefone, String anotacoes) {
+        Pessoa pessoa = consultarPessoaPorCodigo(codigo);
+        if (pessoa != null) {
+            pessoa.setNome(nome);
+            pessoa.setEndereco(endereco);
+            pessoa.setTelefone(telefone);
+            pessoa.setAnotacoes(anotacoes);
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean excluirPessoa(int codigo) {
+        Pessoa pessoa = consultarPessoaPorCodigo(codigo);
+        if (pessoa != null) {
+            pessoas.remove(pessoa);
+            return true;
+        }
+        return false;
+    }
+
+
+    public ArrayList<Pessoa> listarPessoas() {
+        return pessoas;
+    }
+}
+
+
+// Classe PrincipalAgenda
+public class PrincipalAgenda {
+    public static void main(String args[]){
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new TelaPrincipalAgenda();
+            }
+        });
+    }
+}
+
+
+// Classe TelaPrincipalAgenda extends JFrame
+class TelaPrincipalAgenda extends JFrame {
+    private Agenda agenda;
+
+
+    // construtor
+    public TelaPrincipalAgenda (){
+        setTitle("Agenda");
+        setSize(900, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        agenda = new Agenda();
+        getContentPane().add(new TelaContentPane(agenda));
+        setVisible(true);
+    }
+}
+
+
+// Classe TelaContentPane extends JPanel
+class TelaContentPane extends JPanel {
+    private Agenda agenda;
+    private JTextField jtCodigo, jtNome, jtEndereco, jtTelefone;
+    private JTextArea jtaAnotacoes;
+    private JButton jbIncluir, jbConsultar, jbAlterar, jbExcluir, jbLimpar;
+    private JTable tabela;
+    private DefaultTableModel modeloTabela;
+
+
+    public TelaContentPane(Agenda agenda){
+        this.agenda = agenda;
+        setLayout(new BorderLayout(10, 10));
+        montarDadosPessoaAgenda();
+        montarTabela();
+        adicionarListeners();
+    }
+
+
+    private void montarDadosPessoaAgenda(){
+        JPanel jpDadosPessoa = new JPanel();
+        jpDadosPessoa.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+
+        JLabel labelTitulo = new JLabel("Dados Pessoais");
+        labelTitulo.setFont(new Font("Arial", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        jpDadosPessoa.add(labelTitulo, gbc);
+
+
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.LINE_END;
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        jpDadosPessoa.add(new JLabel("Código:"), gbc);
+        jtCodigo = new JTextField(15);
+        jtCodigo.setEditable(false);  // Código gerado automaticamente
+        gbc.gridx = 1;
+        jpDadosPessoa.add(jtCodigo, gbc);
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        jpDadosPessoa.add(new JLabel("Nome:"), gbc);
+        jtNome = new JTextField(15);
+        gbc.gridx = 1;
+        jpDadosPessoa.add(jtNome, gbc);
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        jpDadosPessoa.add(new JLabel("Endereço:"), gbc);
+        jtEndereco = new JTextField(15);
+        gbc.gridx = 1;
+        jpDadosPessoa.add(jtEndereco, gbc);
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        jpDadosPessoa.add(new JLabel("Telefone:"), gbc);
+        jtTelefone = new JTextField(15);
+        gbc.gridx = 1;
+        jpDadosPessoa.add(jtTelefone, gbc);
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        jpDadosPessoa.add(new JLabel("Anotações:"), gbc);
+        jtaAnotacoes = new JTextArea(5, 15);
+        jtaAnotacoes.setLineWrap(true);
+        jtaAnotacoes.setWrapStyleWord(true);
+        gbc.gridx = 1;
+        jpDadosPessoa.add(new JScrollPane(jtaAnotacoes), gbc);
+
+
+        JPanel botoes = new JPanel();
+        jbIncluir = new JButton("Incluir");
+        jbConsultar = new JButton("Consultar");
+        jbAlterar = new JButton("Alterar");
+        jbExcluir = new JButton("Excluir");
+        jbLimpar = new JButton("Limpar");
+        botoes.add(jbIncluir);
+        botoes.add(jbConsultar);
+        botoes.add(jbAlterar);
+        botoes.add(jbExcluir);
+        botoes.add(jbLimpar);
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        jpDadosPessoa.add(botoes, gbc);
+
+
+        add(jpDadosPessoa, BorderLayout.WEST);
+    }
+
+
+    private void montarTabela() {
+        modeloTabela = new DefaultTableModel();
+        tabela = new JTable(modeloTabela);
+        modeloTabela.addColumn("Código");
+        modeloTabela.addColumn("Nome");
+        modeloTabela.addColumn("Endereço");
+        modeloTabela.addColumn("Telefone");
+        modeloTabela.addColumn("Anotações");
+        tabela.setFont(new Font("Arial", Font.PLAIN, 14));
+        tabela.setRowHeight(20);
+        JScrollPane scrollPane = new JScrollPane(tabela);
+        add(scrollPane, BorderLayout.CENTER);
+    }
+
+
+    private void adicionarListeners() {
+        jbIncluir.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String nome = jtNome.getText();
+                String endereco = jtEndereco.getText();
+                String telefone = jtTelefone.getText();
+                String anotacoes = jtaAnotacoes.getText();
+                Pessoa pessoa = new Pessoa(nome, endereco, telefone, anotacoes);
+                agenda.adicionarPessoa(pessoa);
+                limparCampos();
+                JOptionPane.showMessageDialog(null, "Pessoa incluída com sucesso!");
+                atualizarTabela();
+            }
+        });
+
+
+        jbConsultar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String codigoStr = jtCodigo.getText();
+                String nome = jtNome.getText();
+                if (!codigoStr.isEmpty() && !nome.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Por favor, preencha apenas um campo para consulta.");
+                } else if (!codigoStr.isEmpty()) {
+                    int codigo = Integer.parseInt(codigoStr);
+                    Pessoa pessoa = agenda.consultarPessoaPorCodigo(codigo);
+                    if (pessoa != null) {
+                        preencherCampos(pessoa);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Pessoa não encontrada.");
+                    }
+                } else if (!nome.isEmpty()) {
+                    ArrayList<Pessoa> pessoas = agenda.consultarPessoaPorNome(nome);
+                    if (pessoas.size() == 1) {
+                        preencherCampos(pessoas.get(0));
+                    } else if (pessoas.size() > 1) {
+                        // Implementar navegação entre resultados
+                        String[] nomes = new String[pessoas.size()];
+                        for (int i = 0; i < pessoas.size(); i++) {
+                            nomes[i] = pessoas.get(i).getNome();
+                        }
+                        String escolha = (String) JOptionPane.showInputDialog(null, "Escolha a pessoa:", "Resultados da consulta", JOptionPane.QUESTION_MESSAGE, null, nomes, nomes[0]);
+                        for (Pessoa pessoa : pessoas) {
+                            if (pessoa.getNome().equals(escolha)) {
+                                preencherCampos(pessoa);
+                                break;
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Pessoa não encontrada.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Por favor, preencha o campo de código ou nome para consultar.");
+                }
+            }
+        });
+
+
+        jbAlterar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String codigoStr = jtCodigo.getText();
+                if (codigoStr.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Por favor, consulte uma pessoa antes de alterar.");
+                } else {
+                    int codigo = Integer.parseInt(codigoStr);
+                    String nome = jtNome.getText();
+                    String endereco = jtEndereco.getText();
+                    String telefone = jtTelefone.getText();
+                    String anotacoes = jtaAnotacoes.getText();
+                    boolean alterado = agenda.alterarPessoa(codigo, nome, endereco, telefone, anotacoes);
+                    if (alterado) {
+                        limparCampos();
+                        JOptionPane.showMessageDialog(null, "Pessoa alterada com sucesso!");
+                        atualizarTabela();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Erro ao alterar pessoa.");
+                    }
+                }
+            }
+        });
+
+
+        jbExcluir.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String codigoStr = jtCodigo.getText();
+                if (codigoStr.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Por favor, consulte uma pessoa antes de excluir.");
+                } else {
+                    int codigo = Integer.parseInt(codigoStr);
+                    boolean excluido = agenda.excluirPessoa(codigo);
+                    if (excluido) {
+                        limparCampos();
+                        JOptionPane.showMessageDialog(null, "Pessoa excluída com sucesso!");
+                        atualizarTabela();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Erro ao excluir pessoa.");
+                    }
+                }
+            }
+        });
+
+
+        jbLimpar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                limparCampos();
+            }
+        });
+    }
+
+
+    private void preencherCampos(Pessoa pessoa) {
+        jtCodigo.setText(String.valueOf(pessoa.getCodigo()));
+        jtNome.setText(pessoa.getNome());
+        jtEndereco.setText(pessoa.getEndereco());
+        jtTelefone.setText(pessoa.getTelefone());
+        jtaAnotacoes.setText(pessoa.getAnotacoes());
+    }
+
+
+    private void limparCampos() {
+        jtCodigo.setText("");
+        jtNome.setText("");
+        jtEndereco.setText("");
+        jtTelefone.setText("");
+        jtaAnotacoes.setText("");
+    }
+
+
+    private void atualizarTabela() {
+        modeloTabela.setRowCount(0);
+        for (Pessoa pessoa : agenda.listarPessoas()) {
+            modeloTabela.addRow(new Object[]{
+                pessoa.getCodigo(),
+                pessoa.getNome(),
+                pessoa.getEndereco(),
+                pessoa.getTelefone(),
+                pessoa.getAnotacoes()
+            });
+        }
+    }
+}
