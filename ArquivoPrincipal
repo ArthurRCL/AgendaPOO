@@ -138,7 +138,6 @@ class TelaPrincipalAgenda extends JFrame {
     }
 }
 
-
 // Classe TelaContentPane extends JPanel
 class TelaContentPane extends JPanel {
     private Agenda agenda;
@@ -159,89 +158,122 @@ class TelaContentPane extends JPanel {
 
 
     private void montarDadosPessoaAgenda(){
-        JPanel jpDadosPessoa = new JPanel();
-        jpDadosPessoa.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+    JPanel jpDadosPessoa = new JPanel();
+    jpDadosPessoa.setLayout(new GridBagLayout());
+    jpDadosPessoa.setBackground(new Color(230, 240, 255));
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(2, 5, 2, 5); // Ajuste dos espaçamentos
 
 
-        JLabel labelTitulo = new JLabel("Dados Pessoais");
-        labelTitulo.setFont(new Font("Arial", Font.BOLD, 24));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        jpDadosPessoa.add(labelTitulo, gbc);
+    JLabel labelTitulo = new JLabel("Dados Pessoais");
+    labelTitulo.setFont(new Font("Arial", Font.BOLD, 28));
+    labelTitulo.setForeground(new Color(0, 70, 140));
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.gridwidth = 2;
+    gbc.insets = new Insets(10, 5, 20, 5); // Ajuste para subir o título
+    jpDadosPessoa.add(labelTitulo, gbc);
 
 
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.LINE_END;
+    gbc.gridwidth = 1;
+    gbc.anchor = GridBagConstraints.WEST; // Ajuste para alinhar à esquerda
+    gbc.insets = new Insets(5, 5, 5, 5); // Ajuste do espaçamento padrão
 
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        jpDadosPessoa.add(new JLabel("Código:"), gbc);
-        jtCodigo = new JTextField(15);
-        jtCodigo.setEditable(false);  // Código gerado automaticamente
-        gbc.gridx = 1;
-        jpDadosPessoa.add(jtCodigo, gbc);
+    Font labelFont = new Font("Arial", Font.BOLD, 16);
 
 
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        jpDadosPessoa.add(new JLabel("Nome:"), gbc);
-        jtNome = new JTextField(15);
-        gbc.gridx = 1;
-        jpDadosPessoa.add(jtNome, gbc);
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    JLabel jlCodigo = new JLabel("Código:");
+    jlCodigo.setFont(labelFont);
+    jpDadosPessoa.add(jlCodigo, gbc);
+    jtCodigo = new JTextField(20); // Aumentar o tamanho da caixa de texto
+    jtCodigo.setEditable(false);  // Código gerado automaticamente
+    gbc.gridx = 1;
+    jpDadosPessoa.add(jtCodigo, gbc);
 
 
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        jpDadosPessoa.add(new JLabel("Endereço:"), gbc);
-        jtEndereco = new JTextField(15);
-        gbc.gridx = 1;
-        jpDadosPessoa.add(jtEndereco, gbc);
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    JLabel jlNome = new JLabel("Nome:");
+    jlNome.setFont(labelFont);
+    jpDadosPessoa.add(jlNome, gbc);
+    jtNome = new JTextField(20); // Aumentar o tamanho da caixa de texto
+    gbc.gridx = 1;
+    jpDadosPessoa.add(jtNome, gbc);
 
 
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        jpDadosPessoa.add(new JLabel("Telefone:"), gbc);
-        jtTelefone = new JTextField(15);
-        gbc.gridx = 1;
-        jpDadosPessoa.add(jtTelefone, gbc);
+    gbc.gridx = 0;
+    gbc.gridy = 3;
+    JLabel jlEndereco = new JLabel("Endereço:");
+    jlEndereco.setFont(labelFont);
+    jpDadosPessoa.add(jlEndereco, gbc);
+    jtEndereco = new JTextField(20); // Aumentar o tamanho da caixa de texto
+    gbc.gridx = 1;
+    jpDadosPessoa.add(jtEndereco, gbc);
 
 
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        jpDadosPessoa.add(new JLabel("Anotações:"), gbc);
-        jtaAnotacoes = new JTextArea(5, 15);
-        jtaAnotacoes.setLineWrap(true);
-        jtaAnotacoes.setWrapStyleWord(true);
-        gbc.gridx = 1;
-        jpDadosPessoa.add(new JScrollPane(jtaAnotacoes), gbc);
+    gbc.gridx = 0;
+    gbc.gridy = 4;
+    JLabel jlTelefone = new JLabel("Telefone:");
+    jlTelefone.setFont(labelFont);
+    jpDadosPessoa.add(jlTelefone, gbc);
+    jtTelefone = new JTextField(20); // Aumentar o tamanho da caixa de texto
+    gbc.gridx = 1;
+    jpDadosPessoa.add(jtTelefone, gbc);
 
 
-        JPanel botoes = new JPanel();
-        jbIncluir = new JButton("Incluir");
-        jbConsultar = new JButton("Consultar");
-        jbAlterar = new JButton("Alterar");
-        jbExcluir = new JButton("Excluir");
-        jbLimpar = new JButton("Limpar");
-        botoes.add(jbIncluir);
-        botoes.add(jbConsultar);
-        botoes.add(jbAlterar);
-        botoes.add(jbExcluir);
-        botoes.add(jbLimpar);
+    gbc.gridx = 0;
+    gbc.gridy = 5;
+    JLabel jlAnotacoes = new JLabel("Anotações:");
+    jlAnotacoes.setFont(labelFont);
+    jpDadosPessoa.add(jlAnotacoes, gbc);
+    jtaAnotacoes = new JTextArea(5, 20); // Aumentar o tamanho da caixa de texto
+    jtaAnotacoes.setLineWrap(true);
+    jtaAnotacoes.setWrapStyleWord(true);
+    gbc.gridx = 1;
+    jpDadosPessoa.add(new JScrollPane(jtaAnotacoes), gbc);
 
 
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        jpDadosPessoa.add(botoes, gbc);
+    JPanel botoes = new JPanel();
+    jbIncluir = new JButton("Incluir");
+    jbConsultar = new JButton("Consultar");
+    jbAlterar = new JButton("Alterar");
+    jbExcluir = new JButton("Excluir");
+    jbLimpar = new JButton("Limpar");
 
 
-        add(jpDadosPessoa, BorderLayout.WEST);
+    // Estilo dos botões
+    Color buttonBackgroundColor = new Color(0, 102, 204);
+    Color buttonForegroundColor = Color.WHITE;
+    Font buttonFont = new Font("Arial", Font.BOLD, 16);
+    JButton[] buttons = {jbIncluir, jbConsultar, jbAlterar, jbExcluir, jbLimpar};
+
+
+    for (JButton button : buttons) {
+        button.setBackground(buttonBackgroundColor);
+        button.setForeground(buttonForegroundColor);
+        button.setFont(buttonFont);
     }
+
+
+    botoes.add(jbIncluir);
+    botoes.add(jbConsultar);
+    botoes.add(jbAlterar);
+    botoes.add(jbExcluir);
+    botoes.add(jbLimpar);
+
+
+    gbc.gridx = 0;
+    gbc.gridy = 6;
+    gbc.gridwidth = 2;
+    gbc.anchor = GridBagConstraints.CENTER;
+    jpDadosPessoa.add(botoes, gbc);
+
+
+    add(jpDadosPessoa, BorderLayout.WEST);
+}
 
 
     private void montarTabela() {
@@ -252,12 +284,26 @@ class TelaContentPane extends JPanel {
         modeloTabela.addColumn("Endereço");
         modeloTabela.addColumn("Telefone");
         modeloTabela.addColumn("Anotações");
-        tabela.setFont(new Font("Arial", Font.PLAIN, 14));
-        tabela.setRowHeight(20);
+        tabela.setFont(new Font("Arial", Font.PLAIN, 16));
+        tabela.setRowHeight(25);
+        tabela.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
+        tabela.getTableHeader().setBackground(new Color(0, 70, 140));
+        tabela.getTableHeader().setForeground(Color.WHITE);
         JScrollPane scrollPane = new JScrollPane(tabela);
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    public boolean isNumeric(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
     private void adicionarListeners() {
         jbIncluir.addActionListener(new ActionListener() {
@@ -266,11 +312,25 @@ class TelaContentPane extends JPanel {
                 String endereco = jtEndereco.getText();
                 String telefone = jtTelefone.getText();
                 String anotacoes = jtaAnotacoes.getText();
-                Pessoa pessoa = new Pessoa(nome, endereco, telefone, anotacoes);
-                agenda.adicionarPessoa(pessoa);
-                limparCampos();
-                JOptionPane.showMessageDialog(null, "Pessoa incluída com sucesso!");
-                atualizarTabela();
+
+                boolean enumero = isNumeric(telefone);
+                if (!nome.isEmpty()){
+                    if(enumero){
+                        Pessoa pessoa = new Pessoa(nome, endereco, telefone, anotacoes);
+                        agenda.adicionarPessoa(pessoa);
+                        limparCampos();
+                        JOptionPane.showMessageDialog(null, "Pessoa incluída com sucesso!");
+                        atualizarTabela();
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null, "Por favor, preencha o campo Telefone com números!");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "É necessário preencher o nome!");
+                }
             }
         });
 
